@@ -2,11 +2,15 @@ package id.yuana.todo.compose.di
 
 import android.app.Application
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.yuana.todo.compose.data.local.TodoDatabase
+import id.yuana.todo.compose.data.repository.AuthRepository
 import id.yuana.todo.compose.data.repository.TodoRepository
 import javax.inject.Singleton
 
@@ -31,5 +35,12 @@ object AppModule {
     fun provideTodoRepository(database: TodoDatabase): TodoRepository {
         return TodoRepository.Impl(database.todoDao)
     }
+
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepository.Impl(auth)
 
 }

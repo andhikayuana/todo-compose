@@ -8,4 +8,6 @@ sealed class TodoListEvent {
     object OnUndoDeleteClick : TodoListEvent()
     data class OnTodoClick(val todo: Todo) : TodoListEvent()
     object OnAddTodoClick : TodoListEvent()
+    object OnLogoutClick : TodoListEvent()
+    object ShowLogoutDialog : TodoListEvent()
 }

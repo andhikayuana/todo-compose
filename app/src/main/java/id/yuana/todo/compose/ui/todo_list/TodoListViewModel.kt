@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.yuana.todo.compose.data.model.Todo
+import id.yuana.todo.compose.data.repository.AuthRepository
 import id.yuana.todo.compose.data.repository.TodoRepository
 import id.yuana.todo.compose.util.Routes
 import id.yuana.todo.compose.util.UiEvent
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoListViewModel @Inject constructor(
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     val todos = todoRepository.getTodos()
@@ -57,6 +59,18 @@ class TodoListViewModel @Inject constructor(
                         todoRepository.insertTodo(todo)
                     }
                 }
+            }
+            TodoListEvent.OnLogoutClick -> {
+                viewModelScope.launch {
+                    authRepository.signOut()
+                    sendUiEvent(UiEvent.Navigate(
+                        route = Routes.LOGIN,
+                        removeBackStack = true
+                    ))
+                }
+            }
+            TodoListEvent.ShowLogoutDialog -> {
+                sendUiEvent(UiEvent.ShowDialog)
             }
         }
     }

@@ -12,6 +12,9 @@ Todo Android App with Compose
 |--------------------------------------------------|--------------------------------------------------------|------------------------------------------------------|
 | ![alt TodoList](./docs/screenshots/todolist.png) | ![alt TodoAddEdit](./docs/screenshots/todoaddedit.png) | ![alt TodoDelete](./docs/screenshots/tododelete.png) |
 
+## How to Run This Project
+todo
+
 ## Architecture
 todo
 

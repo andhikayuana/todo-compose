@@ -21,7 +21,7 @@ compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
-compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit", version.ref = "compose" }
+compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
@@ -36,6 +36,10 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 junit = "junit:junit:4.13.2"
 test-ext-junit = "androidx.test.ext:junit:1.1.4"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0"
+
+firebase-bom = "com.google.firebase:firebase-bom:31.1.1"
+firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
+playservices-auth = "com.google.android.gms:play-services-auth:20.4.0"
 
 [bundles]
 room = ["room-ktx", "room-runtime"]

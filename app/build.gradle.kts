@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -68,6 +69,10 @@ dependencies {
 
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.playservices.auth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.test.android)
