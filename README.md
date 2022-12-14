@@ -23,7 +23,7 @@ todo
 - [x] Todo List
 - [x] Todo Add or Edit
 - [x] Using Local Data
-- [ ] Migrate to gradle version catalog
+- [x] Migrate to gradle version catalog
 - [ ] Add User Register and Login
 - [ ] Store to Cloud (e.g. Firebase Firestore)
 - [ ] Support Multiple Device
