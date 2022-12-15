@@ -24,7 +24,7 @@ interface AuthRepository {
 
         override suspend fun signUp(email: String, password: String): AuthResult {
             return suspendCoroutine { continuation ->
-                auth.signInWithEmailAndPassword(email, password)
+                auth.createUserWithEmailAndPassword(email, password)
                     .addOnSuccessListener { continuation.resume(it) }
                     .addOnFailureListener { continuation.resumeWithException(it) }
             }

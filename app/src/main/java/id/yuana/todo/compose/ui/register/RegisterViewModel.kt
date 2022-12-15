@@ -1,5 +1,4 @@
-package id.yuana.todo.compose.ui.login
-
+package id.yuana.todo.compose.ui.register
 
 import android.util.Patterns
 import androidx.compose.runtime.getValue
@@ -17,27 +16,30 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    var loginState by mutableStateOf(LoginState())
+    var registerState by mutableStateOf(RegisterState())
         private set
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onEvent(event: LoginEvent) {
+    fun onEvent(event: RegisterEvent) {
         when (event) {
-            is LoginEvent.OnEmailChange -> {
-                loginState = loginState.copy(email = event.email)
+            is RegisterEvent.OnEmailChange -> {
+                registerState = registerState.copy(email = event.email)
             }
-            is LoginEvent.OnPasswordChange -> {
-                loginState = loginState.copy(password = event.password)
+            is RegisterEvent.OnPasswordChange -> {
+                registerState = registerState.copy(password = event.password)
             }
-            LoginEvent.OnLoginClick -> {
+            is RegisterEvent.OnPasswordConfirmChange -> {
+                registerState = registerState.copy(passwordConfirm = event.passwordConfirm)
+            }
+            RegisterEvent.OnRegisterClick -> {
                 viewModelScope.launch {
-                    if (loginState.email.isBlank()) {
+                    if (registerState.email.isBlank()) {
                         sendUiEvent(
                             UiEvent.ShowSnackbar(
                                 message = "Email can't be empty"
@@ -46,7 +48,7 @@ class LoginViewModel @Inject constructor(
                         return@launch
                     }
 
-                    if (Patterns.EMAIL_ADDRESS.matcher(loginState.email).matches().not()) {
+                    if (Patterns.EMAIL_ADDRESS.matcher(registerState.email).matches().not()) {
                         sendUiEvent(
                             UiEvent.ShowSnackbar(
                                 message = "That's not a valid email"
@@ -55,7 +57,7 @@ class LoginViewModel @Inject constructor(
                         return@launch
                     }
 
-                    if (loginState.password.isBlank()) {
+                    if (registerState.password.isBlank()) {
                         sendUiEvent(
                             UiEvent.ShowSnackbar(
                                 message = "Password can't be empty"
@@ -64,10 +66,28 @@ class LoginViewModel @Inject constructor(
                         return@launch
                     }
 
+                    if (registerState.password.length < 8) {
+                        sendUiEvent(
+                            UiEvent.ShowSnackbar(
+                                message = "Password need to consist of at least 8 characters"
+                            )
+                        )
+                        return@launch
+                    }
+
+                    if (registerState.passwordConfirm != registerState.password) {
+                        sendUiEvent(
+                            UiEvent.ShowSnackbar(
+                                message = "Password Confirm not match"
+                            )
+                        )
+                        return@launch
+                    }
+
                     try {
-                        authRepository.signIn(
-                            email = loginState.email.trim(),
-                            password = loginState.password.trim()
+                        authRepository.signUp(
+                            email = registerState.email.trim(),
+                            password = registerState.password.trim()
                         )
                         sendUiEvent(
                             UiEvent.Navigate(
@@ -82,11 +102,7 @@ class LoginViewModel @Inject constructor(
                             )
                         )
                     }
-
                 }
-            }
-            LoginEvent.OnGotoRegisterClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.REGISTER))
             }
         }
     }

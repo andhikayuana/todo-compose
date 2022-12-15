@@ -57,7 +57,7 @@ fun TodoListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Todo List")
+                    Text(text = "Todo Compose - List")
                 },
                 actions = {
                     IconButton(onClick = {

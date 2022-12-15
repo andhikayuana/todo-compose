@@ -56,7 +56,7 @@ fun TodoAppMainScreen(
                 composable(Routes.LOGIN) {
                     LoginScreen(onNavigate = { event ->
                         navController.navigate(event.route) {
-                            if (event.route == Routes.TODO_LIST && event.removeBackStack) {
+                            if (event.removeBackStack) {
                                 popUpTo(Routes.LOGIN) {
                                     inclusive = true
                                 }
@@ -65,13 +65,24 @@ fun TodoAppMainScreen(
                     })
                 }
                 composable(Routes.REGISTER) {
-                    RegisterScreen()
+                    RegisterScreen(
+                        onNavigate = { event ->
+                            navController.navigate(event.route) {
+                                if (event.removeBackStack) {
+                                    popUpTo(Routes.REGISTER) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                        },
+                        onPopBackStack = { navController.popBackStack() }
+                    )
                 }
                 composable(Routes.TODO_LIST) {
                     TodoListScreen(
                         onNavigate = { event ->
                             navController.navigate(event.route) {
-                                if (event.route == Routes.LOGIN && event.removeBackStack) {
+                                if (event.removeBackStack) {
                                     popUpTo(Routes.TODO_LIST) {
                                         inclusive = true
                                     }

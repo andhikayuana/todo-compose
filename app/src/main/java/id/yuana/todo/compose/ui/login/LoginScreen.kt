@@ -12,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import id.yuana.todo.compose.util.UiEvent
@@ -44,25 +45,26 @@ fun LoginScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Login")
-                }
-            )
-        },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) {
         Column(
             modifier = Modifier
                 .padding(it)
-                .padding(horizontal = 8.dp)
-                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
         ) {
             val focusManager = LocalFocusManager.current
 
+            Text(
+                text = "Todo Compose - Login",
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             TextField(
-                value = viewModel.email,
+                value = viewModel.loginState.email,
                 onValueChange = {
                     viewModel.onEvent(LoginEvent.OnEmailChange(it))
                 },
@@ -78,9 +80,9 @@ fun LoginScreen(
                     )
                 },
             )
-            Spacer(modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(16.dp))
             TextField(
-                value = viewModel.password,
+                value = viewModel.loginState.password,
                 onValueChange = {
                     viewModel.onEvent(LoginEvent.OnPasswordChange(it))
                 },
@@ -97,7 +99,7 @@ fun LoginScreen(
                 },
                 visualTransformation = PasswordVisualTransformation(),
             )
-            Spacer(modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
