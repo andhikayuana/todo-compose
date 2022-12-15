@@ -36,6 +36,9 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 junit = "junit:junit:4.13.2"
 test-ext-junit = "androidx.test.ext:junit:1.1.4"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0"
+test-mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:3.2.0"
+test-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$1.6.10"
+test-arch-core = "androidx.arch.core:core-testing:2.1.0"
 
 firebase-bom = "com.google.firebase:firebase-bom:31.1.1"
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }

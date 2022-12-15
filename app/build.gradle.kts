@@ -75,6 +75,11 @@ dependencies {
     implementation(libs.playservices.auth)
 
     testImplementation(libs.junit)
+    testImplementation(libs.test.mockito.kotlin)
+    testImplementation(libs.test.coroutines)
+    testImplementation(libs.test.arch.core)
+
     androidTestImplementation(libs.bundles.test.android)
     debugImplementation(libs.bundles.compose.debug)
+
 }
