@@ -12,6 +12,9 @@ import dagger.hilt.components.SingletonComponent
 import id.yuana.todo.compose.data.local.TodoDatabase
 import id.yuana.todo.compose.data.repository.AuthRepository
 import id.yuana.todo.compose.data.repository.TodoRepository
+import id.yuana.todo.compose.util.EmailValidator
+import id.yuana.todo.compose.util.PasswordConfirmValidator
+import id.yuana.todo.compose.util.PasswordValidator
 import javax.inject.Singleton
 
 @Module
@@ -43,4 +46,12 @@ object AppModule {
     @Singleton
     fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepository.Impl(auth)
 
+    @Provides
+    fun provideEmailValidator(): EmailValidator = EmailValidator()
+
+    @Provides
+    fun providePasswordValidator(): PasswordValidator = PasswordValidator()
+
+    @Provides
+    fun providePasswordConfirmValidator(): PasswordConfirmValidator = PasswordConfirmValidator()
 }

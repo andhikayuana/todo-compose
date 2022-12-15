@@ -1,7 +1,6 @@
 package id.yuana.todo.compose.ui.login
 
 
-import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.yuana.todo.compose.data.repository.AuthRepository
+import id.yuana.todo.compose.util.EmailValidator
+import id.yuana.todo.compose.util.PasswordValidator
 import id.yuana.todo.compose.util.Routes
 import id.yuana.todo.compose.util.UiEvent
 import kotlinx.coroutines.channels.Channel
@@ -18,7 +19,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val emailValidator: EmailValidator,
+    private val passwordValidator: PasswordValidator
 ) : ViewModel() {
 
     var loginState by mutableStateOf(LoginState())
@@ -36,34 +39,26 @@ class LoginViewModel @Inject constructor(
                 loginState = loginState.copy(password = event.password)
             }
             LoginEvent.OnLoginClick -> {
+
+                loginState = loginState.copy(
+                    emailErrorMessage = null,
+                    passwordErrorMessage = null
+                )
+
+                val emailResult = emailValidator.execute(loginState.email)
+                val passwordResult = passwordValidator.execute(loginState.password)
+
+                val hasError = listOf(emailResult, passwordResult).any { it.successful.not() }
+
+                if (hasError) {
+                    loginState = loginState.copy(
+                        emailErrorMessage = emailResult.errorMessage,
+                        passwordErrorMessage = passwordResult.errorMessage
+                    )
+                    return
+                }
+
                 viewModelScope.launch {
-                    if (loginState.email.isBlank()) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "Email can't be empty"
-                            )
-                        )
-                        return@launch
-                    }
-
-                    if (Patterns.EMAIL_ADDRESS.matcher(loginState.email).matches().not()) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "That's not a valid email"
-                            )
-                        )
-                        return@launch
-                    }
-
-                    if (loginState.password.isBlank()) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "Password can't be empty"
-                            )
-                        )
-                        return@launch
-                    }
-
                     try {
                         authRepository.signIn(
                             email = loginState.email.trim(),
