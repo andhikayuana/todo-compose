@@ -40,10 +40,7 @@ class LoginViewModel @Inject constructor(
             }
             LoginEvent.OnLoginClick -> {
 
-                loginState = loginState.copy(
-                    emailErrorMessage = null,
-                    passwordErrorMessage = null
-                )
+                loginState = loginState.resetErrorMessages()
 
                 val emailResult = emailValidator.execute(loginState.email)
                 val passwordResult = passwordValidator.execute(loginState.password)

@@ -1,6 +1,5 @@
 package id.yuana.todo.compose.ui.register
 
-import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,8 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.yuana.todo.compose.data.repository.AuthRepository
-import id.yuana.todo.compose.util.Routes
-import id.yuana.todo.compose.util.UiEvent
+import id.yuana.todo.compose.util.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -17,7 +15,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val emailValidator: EmailValidator,
+    private val passwordValidator: PasswordValidator,
+    private val passwordConfirmValidator: PasswordConfirmValidator
 ) : ViewModel() {
 
     var registerState by mutableStateOf(RegisterState())
@@ -38,52 +39,33 @@ class RegisterViewModel @Inject constructor(
                 registerState = registerState.copy(passwordConfirm = event.passwordConfirm)
             }
             RegisterEvent.OnRegisterClick -> {
+
+                registerState = registerState.resetErrorMessages()
+
+                val emailResult = emailValidator.execute(registerState.email)
+                val passwordResult = passwordValidator.execute(registerState.password)
+                val passwordConfirmResult =
+                    passwordConfirmValidator.execute(
+                        password = registerState.password,
+                        passwordConfirm = registerState.passwordConfirm
+                    )
+
+                val hasError = listOf(
+                    emailResult,
+                    passwordResult,
+                    passwordConfirmResult
+                ).any { it.successful.not() }
+
+                if (hasError) {
+                    registerState = registerState.copy(
+                        emailErrorMessage = emailResult.errorMessage,
+                        passwordErrorMessage = passwordResult.errorMessage,
+                        passwordConfirmErrorMessage = passwordConfirmResult.errorMessage
+                    )
+                    return
+                }
+
                 viewModelScope.launch {
-                    if (registerState.email.isBlank()) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "Email can't be empty"
-                            )
-                        )
-                        return@launch
-                    }
-
-                    if (Patterns.EMAIL_ADDRESS.matcher(registerState.email).matches().not()) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "That's not a valid email"
-                            )
-                        )
-                        return@launch
-                    }
-
-                    if (registerState.password.isBlank()) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "Password can't be empty"
-                            )
-                        )
-                        return@launch
-                    }
-
-                    if (registerState.password.length < 8) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "Password need to consist of at least 8 characters"
-                            )
-                        )
-                        return@launch
-                    }
-
-                    if (registerState.passwordConfirm != registerState.password) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "Password Confirm not match"
-                            )
-                        )
-                        return@launch
-                    }
-
                     try {
                         authRepository.signUp(
                             email = registerState.email.trim(),

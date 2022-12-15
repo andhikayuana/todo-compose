@@ -110,6 +110,10 @@ fun LoginScreen(
                     )
                 },
                 visualTransformation = PasswordVisualTransformation(),
+                isError = viewModel.loginState.passwordErrorMessage != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                )
             )
             viewModel.loginState.passwordErrorMessage?.let {
                 Text(
