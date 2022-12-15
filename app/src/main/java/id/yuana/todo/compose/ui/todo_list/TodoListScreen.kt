@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import id.yuana.todo.compose.util.UiEvent
@@ -123,7 +124,11 @@ fun TodoListScreen(
         ) {
             if (todos.value.isEmpty()) {
                 item {
-                    Text(text = "Todo is empty")
+                    Text(
+                        text = "Todo is empty",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
                 }
             } else {
                 items(todos.value) { todo ->
