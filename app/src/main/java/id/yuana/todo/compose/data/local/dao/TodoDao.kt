@@ -22,4 +22,7 @@ interface TodoDao {
 
     @Query("SELECT * FROM todos")
     fun getTodos(): Flow<List<TodoEntity>>
+
+    @Query("DELETE FROM todos")
+    suspend fun clearTodos()
 }

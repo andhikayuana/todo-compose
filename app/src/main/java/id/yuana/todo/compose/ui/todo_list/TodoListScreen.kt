@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import id.yuana.todo.compose.util.UiEvent
@@ -25,6 +27,7 @@ fun TodoListScreen(
 
     val todos = viewModel.todos.collectAsState(initial = emptyList())
     val snackbarHostState = remember { SnackbarHostState() }
+    val logoutDialogState = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
@@ -43,6 +46,9 @@ fun TodoListScreen(
                         }
                     }
                 }
+                UiEvent.ShowDialog -> {
+                    logoutDialogState.value = true
+                }
                 else -> Unit
             }
         }
@@ -52,7 +58,17 @@ fun TodoListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Todo List")
+                    Text(text = "Todo Compose - List")
+                },
+                actions = {
+                    IconButton(onClick = {
+                        viewModel.onEvent(TodoListEvent.ShowLogoutDialog)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Logout"
+                        )
+                    }
                 }
             )
         },
@@ -67,6 +83,40 @@ fun TodoListScreen(
                 )
             }
         }) {
+
+        if (logoutDialogState.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    logoutDialogState.value = false
+                },
+                title = {
+                    Text(text = "Logout")
+                },
+                text = {
+                    Text(text = "Are you sure want to logout from this app?")
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            logoutDialogState.value = false
+                            viewModel.onEvent(TodoListEvent.OnLogoutClick)
+                        }
+                    ) {
+                        Text("Yes")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            logoutDialogState.value = false
+                        }
+                    ) {
+                        Text("No")
+                    }
+                }
+            )
+        }
+
         LazyColumn(
             modifier = Modifier
                 .padding(it)
@@ -74,7 +124,11 @@ fun TodoListScreen(
         ) {
             if (todos.value.isEmpty()) {
                 item {
-                    Text(text = "Todo is empty")
+                    Text(
+                        text = "Todo is empty",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
                 }
             } else {
                 items(todos.value) { todo ->

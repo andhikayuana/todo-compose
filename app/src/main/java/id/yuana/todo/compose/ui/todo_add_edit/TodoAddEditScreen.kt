@@ -46,7 +46,7 @@ fun TodoAddEditScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Todo Add or Edit")
+                    Text(text = "Todo Compose - Add or Edit")
                 }
             )
         },
@@ -65,7 +65,7 @@ fun TodoAddEditScreen(
         Column(
             modifier = Modifier
                 .padding(it)
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxSize()
         ) {
             TextField(
@@ -79,7 +79,7 @@ fun TodoAddEditScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            Spacer(modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(16.dp))
             TextField(
                 value = viewModel.description,
                 onValueChange = {
