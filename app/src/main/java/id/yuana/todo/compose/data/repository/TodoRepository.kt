@@ -17,6 +17,8 @@ interface TodoRepository {
 
     fun getTodos(): Flow<List<Todo>>
 
+    suspend fun clearTodos()
+
     class Impl(
         private val todoDao: TodoDao
     ) : TodoRepository {
@@ -36,6 +38,11 @@ interface TodoRepository {
         override fun getTodos(): Flow<List<Todo>> {
             return todoDao.getTodos().map { it.map { it.mapFromEntity() } }
         }
+
+        override suspend fun clearTodos() {
+            todoDao.clearTodos()
+        }
+
 
     }
 }

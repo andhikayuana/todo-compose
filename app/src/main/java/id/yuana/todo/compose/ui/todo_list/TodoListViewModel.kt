@@ -63,6 +63,7 @@ class TodoListViewModel @Inject constructor(
             TodoListEvent.OnLogoutClick -> {
                 viewModelScope.launch {
                     authRepository.signOut()
+                    todoRepository.clearTodos()
                     sendUiEvent(UiEvent.Navigate(
                         route = Routes.LOGIN,
                         removeBackStack = true

@@ -1,6 +1,6 @@
 package id.yuana.todo.compose.util
 
-import android.util.Patterns
+import androidx.core.util.PatternsCompat
 
 data class ValidationResult(
     val successful: Boolean,
@@ -20,7 +20,7 @@ class EmailValidator {
             )
         }
 
-        if (Patterns.EMAIL_ADDRESS.matcher(email).matches().not()) {
+        if (PatternsCompat.EMAIL_ADDRESS.matcher(email).matches().not()) {
             return ValidationResult(
                 successful = false,
                 errorMessage = "That's not a valid email"
