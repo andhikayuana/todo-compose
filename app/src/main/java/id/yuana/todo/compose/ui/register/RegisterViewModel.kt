@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.yuana.todo.compose.data.repository.AuthRepository
+import id.yuana.todo.compose.navigation.Screen
 import id.yuana.todo.compose.util.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -73,8 +74,8 @@ class RegisterViewModel @Inject constructor(
                         )
                         sendUiEvent(
                             UiEvent.Navigate(
-                                route = Routes.TODO_LIST,
-                                removeBackStack = true
+                                route = Screen.TodoList.route,
+                                clearBackStack = true
                             )
                         )
                     } catch (e: Exception) {
