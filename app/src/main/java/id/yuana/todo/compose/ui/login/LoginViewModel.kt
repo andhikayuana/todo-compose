@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.yuana.todo.compose.data.repository.AuthRepository
+import id.yuana.todo.compose.navigation.Screen
 import id.yuana.todo.compose.util.EmailValidator
 import id.yuana.todo.compose.util.PasswordValidator
-import id.yuana.todo.compose.util.Routes
 import id.yuana.todo.compose.util.UiEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -63,8 +63,8 @@ class LoginViewModel @Inject constructor(
                         )
                         sendUiEvent(
                             UiEvent.Navigate(
-                                route = Routes.TODO_LIST,
-                                removeBackStack = true
+                                route = Screen.TodoList.route,
+                                clearBackStack = true
                             )
                         )
                     } catch (e: Exception) {
@@ -78,7 +78,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
             LoginEvent.OnGotoRegisterClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.REGISTER))
+                sendUiEvent(UiEvent.Navigate(Screen.Register.route))
             }
         }
     }

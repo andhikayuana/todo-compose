@@ -10,20 +10,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.yuana.todo.compose.data.repository.AuthRepository
+import id.yuana.todo.compose.navigation.Screen
 import id.yuana.todo.compose.ui.login.LoginScreen
 import id.yuana.todo.compose.ui.register.RegisterScreen
 import id.yuana.todo.compose.ui.theme.TodoComposeTheme
 import id.yuana.todo.compose.ui.todo_add_edit.TodoAddEditScreen
 import id.yuana.todo.compose.ui.todo_list.TodoListScreen
-import id.yuana.todo.compose.util.Routes
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,56 +47,45 @@ fun TodoAppMainScreen(
             NavHost(
                 navController = navController,
                 startDestination = when {
-                    viewModel.isUserAuthenticated -> Routes.TODO_LIST
-                    else -> Routes.LOGIN
+                    viewModel.isUserAuthenticated -> Screen.TodoList.route
+                    else -> Screen.Login.route
                 }
             ) {
-                composable(Routes.LOGIN) {
+                composable(Screen.Login.route) {
                     LoginScreen(onNavigate = { event ->
                         navController.navigate(event.route) {
-                            if (event.removeBackStack) {
-                                popUpTo(Routes.LOGIN) {
-                                    inclusive = true
-                                }
+                            if (event.clearBackStack) {
+                                popUpTo(0)
                             }
                         }
                     })
                 }
-                composable(Routes.REGISTER) {
+                composable(Screen.Register.route) {
                     RegisterScreen(
                         onNavigate = { event ->
                             navController.navigate(event.route) {
-                                if (event.removeBackStack) {
-                                    popUpTo(Routes.REGISTER) {
-                                        inclusive = true
-                                    }
+                                if (event.clearBackStack) {
+                                    popUpTo(0)
                                 }
                             }
                         },
                         onPopBackStack = { navController.popBackStack() }
                     )
                 }
-                composable(Routes.TODO_LIST) {
+                composable(Screen.TodoList.route) {
                     TodoListScreen(
                         onNavigate = { event ->
                             navController.navigate(event.route) {
-                                if (event.removeBackStack) {
-                                    popUpTo(Routes.TODO_LIST) {
-                                        inclusive = true
-                                    }
+                                if (event.clearBackStack) {
+                                    popUpTo(0)
                                 }
                             }
                         }
                     )
                 }
                 composable(
-                    route = "${Routes.TODO_ADD_EDIT}?todoId={todoId}",
-                    arguments = listOf(
-                        navArgument(name = "todoId") {
-                            type = NavType.IntType
-                            defaultValue = -1
-                        }
-                    )
+                    route = Screen.TodoAddEdit.route,
+                    arguments = Screen.TodoAddEdit.args
                 ) {
                     TodoAddEditScreen(onPopBackStack = {
                         navController.popBackStack()
