@@ -1,12 +1,13 @@
 package id.yuana.todo.compose.navigation
 
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 sealed class Screen(
     val route: String,
-    val args: List<NamedNavArgument> = listOf()
+    val args: List<NamedNavArgument> = listOf(),
 ) {
     object Login : Screen("/login")
     object Register : Screen("/register")
