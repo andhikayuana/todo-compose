@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import id.yuana.todo.compose.data.model.Todo
 import id.yuana.todo.compose.data.repository.AuthRepository
 import id.yuana.todo.compose.data.repository.TodoRepository
-import id.yuana.todo.compose.util.Routes
+import id.yuana.todo.compose.navigation.Screen
 import id.yuana.todo.compose.util.UiEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -29,7 +29,7 @@ class TodoListViewModel @Inject constructor(
     fun onEvent(event: TodoListEvent) {
         when (event) {
             is TodoListEvent.OnTodoClick -> {
-                sendUiEvent(UiEvent.Navigate("${Routes.TODO_ADD_EDIT}?todoId=${event.todo.id}"))
+                sendUiEvent(UiEvent.Navigate(Screen.TodoAddEdit.routeWithArg(event.todo.id ?: -1)))
             }
             is TodoListEvent.OnDeleteTodoClick -> {
                 viewModelScope.launch {
@@ -44,7 +44,7 @@ class TodoListViewModel @Inject constructor(
                 }
             }
             TodoListEvent.OnAddTodoClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.TODO_ADD_EDIT))
+                sendUiEvent(UiEvent.Navigate(Screen.TodoAddEdit.route))
             }
             is TodoListEvent.OnDoneChange -> {
                 viewModelScope.launch {
@@ -64,10 +64,12 @@ class TodoListViewModel @Inject constructor(
                 viewModelScope.launch {
                     authRepository.signOut()
                     todoRepository.clearTodos()
-                    sendUiEvent(UiEvent.Navigate(
-                        route = Routes.LOGIN,
-                        removeBackStack = true
-                    ))
+                    sendUiEvent(
+                        UiEvent.Navigate(
+                            route = Screen.Login.route,
+                            clearBackStack = true
+                        )
+                    )
                 }
             }
             TodoListEvent.ShowLogoutDialog -> {
